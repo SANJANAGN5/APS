@@ -1,0 +1,77 @@
+---
+title: "Blood Donation"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+
+#### Blood type percentage in population in the order O-, O+, A-, A+, B-, B+, AB-, AB+
+```{r}
+blood_population_percentage = c(6.6, 37.4, 6.3, 35.7, 1.5, 8.5, 0.6, 3.4)
+blood_population_propotion = blood_population_percentage / 100
+names(blood_population_propotion) = c('O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+')
+print(blood_population_propotion)
+```
+
+#### Create the blood transfusion compatibility matrix by building it row-by-row starting with recipient type O- followed by recipient O+ etc
+```{r}
+recipient_ominus = c(1, 0, 0, 0, 0, 0, 0, 0)
+recipient_oplus = c(1, 1, 0, 0, 0, 0, 0, 0 )
+recipient_Aminus = c(1, 0, 1, 0, 0, 0, 0, 0)
+recipient_Aplus = c(1, 1, 1, 1, 0, 0, 0, 0)
+recipient_Bminus = c(1, 0, 0, 0, 1, 0, 0, 0)
+recipient_Bplus = c(1, 1, 0, 0, 1, 1, 0, 0)
+recipient_ABminus = c(1, 0, 1, 0, 1, 0, 1, 0)
+recipient_ABplus = c(1, 1, 1, 1, 1, 1, 1, 1)
+
+C = matrix(c(recipient_ominus, recipient_oplus, recipient_Aminus, recipient_Aplus, recipient_Bminus, recipient_Bplus, recipient_ABminus, recipient_ABplus), nrow = 8, ncol = 8, byrow = T)
+
+rownames(C) = names(blood_population_propotion)
+colnames(C) = rownames(C)
+C
+```
+
+#### Probability of a successful transfusion between and random donor and a random recipient
+```{r}
+s = c('O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+')
+p = blood_population_propotion
+
+```
+```{r}
+simTrail = function(){
+  return(sample(s, size=2, replace = T, prob = p))
+}
+simTrail()
+
+```
+```{r}
+nsimulations = 10
+simulatedData = replicate(nsimulations, simTrail())
+simulatedData
+```
+
+```{r}
+checkEvent = function(data){
+  return(C[data[2], data[1]])
+}
+  
+result=apply(simulatedData, 2, checkEvent)
+result
+mean(result)
+```
+
+
+#### In a battle field hospital a soldier is brought in for immediate blood transfusion. Only blood type A+ is available in the supply for immediate use. We do not know the wounded soldier’s blood type. There are two other soldiers present who are willing to donate their blood. We have time to do one blood typing before time becomes critical. What should we do?
+```{r}
+# Probability of successful transfusion to wounded soldier if we test the blood type of the wounded soldier
+# Compatibility matrix with recipient entries zeroed out for A+ and AB+
+
+# Probability of successful transfusion to wounded soldier if we test the blood type of one of the other soldiers
+```
+
+

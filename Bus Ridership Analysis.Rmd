@@ -1,0 +1,71 @@
+---
+title: "Bus Ridership Analysis"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+
+#### Create a vector s1 whose elements correspond to the number of passengers who can possibly get on board the bus at a particular stop.
+
+```{r}
+s1 = c(0,1,2)
+```
+
+####Create a vector p1 whose elements correspond to the respective chances of the number of passengers identied in the previous question getting on board the bus at a particular stop
+ 
+```{r}
+p1 = c(0.5, 0.4, 0.1)
+```
+
+#### Create a matrix P such that the jth column of this matrix should have a passenger on the buss continuing-on and getting-o chances for the jth stop for j = 1....10
+
+```{r}
+P = matrix(c(0.99, 0.1, 0.2, 0.8, 0.2, 0.8, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.8, 0.2, 0.2, 0.8, 0.2, 0.8, 0.0, 1.0), nrow = 2, ncol = 10)
+P
+```
+#### Create a vector s2 whose elements correspond to the encoded versions of a passenger staying on the bus and getting o of the bus at a particular stop, respectively.
+
+```{r}
+s2 = c(0,1)
+```
+
+
+```{r}
+sample(s1, size = 10, replace = T, prob = p1)
+```
+
+```{r}
+n=30  #zero passengers in the bus at stop 1
+for (j in c(1:10)){
+    #simulating the continuing or getting off the bus
+    if (n > 0){ #if there is at least one passenger in the bus 
+        n = n - sum(sample(s2, size=n, replace=TRUE, prob=P[, j])) #number of passengers getting off of the bus
+    }
+cat(sprintf('No of passengers after stop-%d = %d\n', j, n))  
+n = n + sum(sample(s1, size=1, prob=p1))
+}
+
+```
+s1 = A1 , A2
+S2 = A3 TO A10 AND B1 TO B10
+X
+P1 = c(0.5, 0.5)
+P2 = replicate(18, 1/18)
+
+sample(s1, size=1, prob=p1)                            
+sample(s2, size=1, prob=p2)    
+
+c(sample(s1, size=1, prob=p1), sample(s2, size=1, prob=p2))
+
+
+
+
+
+
+
+
+

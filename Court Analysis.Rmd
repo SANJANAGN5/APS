@@ -1,0 +1,79 @@
+---
+title: "Court Decision Analysis"
+output:
+  word_document: default
+  html_document:
+    df_print: paged
+  pdf_document: default
+editor_options:
+  chunk_output_type: inline
+---
+
+#### Execute the following cells to load the libraries
+
+```{r}
+library('ggplot2')
+library('dplyr')
+```
+
+
+#### Load the court dataset
+
+```{r}
+file = 'Data/court.csv'
+courtData = read.csv(file, header=T)
+head(courtData, 5)
+```
+
+
+####define the sampling space and the picking likelihood vectors
+```{r}
+# How does Judge-A rule on n petitions?
+s=c(0,1) # 0 = incorrect decision, 1 = correct decision
+p=rbind(1-apply(courtData, 2, mean), apply(courtData, 2, mean))
+p
+```
+
+#### Call the user-defined function to simulate a one trail of the random experiment which is to simulate the court's decision for one unseen petition 
+
+```{r}
+simTrial = function(){
+  #vector to store judge's decision
+  decision = vector('integer', 5) 
+  
+  #run over each judge
+  for (j in c(1:5)){
+    #simulate judge-j decision and store it
+    decision[j] = sample(s, size=1, prob=p[, j])
+  }
+  return(decision)
+}
+simTrial()
+mean(simTrial())
+```
+
+
+
+```{r}
+nsimulations = 1e4
+simulatedData = replicate(nsimulations, simTrial())
+simulatedData
+print(mean(simulatedData))
+print(1-mean(simulatedData))
+```
+
+
+
+```{r}
+#function to check if couert has made an incorrect decision
+checkEvent = function(data){
+  return(sum(data) < 3)
+}
+apply(simulatedData, 2, checkEvent)
+
+```
+```{r}
+print(mean(apply(simulatedData, 2, checkEvent)))
+mean(1-mean(apply(simulatedData, 2, checkEvent)))
+```
+

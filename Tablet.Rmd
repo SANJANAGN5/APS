@@ -1,0 +1,35 @@
+
+```{r}
+s11 = c("A1", "A2")
+s11
+```
+
+```{r}
+s22 = c(paste0("A", 3:10), paste0("B", 1:10))
+s22
+```
+
+```{r}
+p11 = c(0.5, 0.5)
+p11
+```
+
+```{r}
+p22 = replicate(18, 1/18)
+p22
+```
+
+```{r}
+sample1 = sample(s11, size = 1, prob = p11)
+sample1
+```
+
+```{r}
+sample2 = sample(s22, size = 1, prob = p22)
+sample2
+```
+```{r}
+c(sample(s11, size=1, prob=p11), sample(s22, size=1, prob=p22))
+```
+
+
